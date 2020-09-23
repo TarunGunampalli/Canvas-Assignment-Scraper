@@ -4,7 +4,7 @@ import requests
 # Canvas API URL
 API_URL = "https://utexas.instructure.com"
 # Canvas API key
-API_KEY = "1017~1Wi1q7dm8WaLjbrdqQsP8lpBafuw4LYVSOgi8xxjmFQSSGl9G5UHR0J5VvDfS36z"
+API_KEY = <YOUR_API_KEY>
 # My User ID
 USER_ID = "4345098"
 
