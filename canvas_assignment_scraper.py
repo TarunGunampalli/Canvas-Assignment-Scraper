@@ -4,11 +4,11 @@ import requests
 # Canvas API URL
 API_URL = "https://utexas.instructure.com"
 # Canvas API key
-API_KEY = <YOUR_API_KEY>
+AUTH_KEY = <YOUR_AUTH_KEY>
 # My User ID
 USER_ID = "4345098"
 
-headers = {"Authorization": "Bearer " + API_KEY}
+headers = {"Authorization": "Bearer " + AUTH_KEY}
 
 courses = requests.get(API_URL + "/api/v1/courses", headers=headers)
 
