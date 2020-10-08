@@ -1,4 +1,5 @@
 from __future__ import print_function
+import datetime
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -6,11 +7,12 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/tasks']
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+
 
 def main():
-    """Shows basic usage of the Tasks API.
-    Prints the title and ID of the first 10 task lists.
+    """Shows basic usage of the Google Calendar API.
+    Prints the start and name of the next 10 events on the user's calendar.
     """
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -31,18 +33,22 @@ def main():
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('tasks', 'v1', credentials=creds)
+    service = build('calendar', 'v3', credentials=creds)
 
-    # Call the Tasks API
-    results = service.tasklists().list(maxResults=10).execute()
-    items = results.get('items', [])
+    # Call the Calendar API
+    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    print('Getting the upcoming 10 events')
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=10, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
 
-    if not items:
-        print('No task lists found.')
-    else:
-        print('Task lists:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['title'], item['id']))
+    if not events:
+        print('No upcoming events found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(start, event['summary'])
+
 
 if __name__ == '__main__':
     main()
